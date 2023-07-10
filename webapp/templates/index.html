@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Trading Bot</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      
+      .card {
+        width: 400px;
+        padding: 20px;
+        background-color: transparent;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      .title {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: rgb(250, 246, 246);
+      }
+      
+      .form-group1 {
+        margin-bottom: 20px;
+        color: rgb(250, 246, 246);
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+      
+      .form-group label {
+        display: block;
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+      
+      .form-group input {
+        width: 100%;
+        padding: 8px;
+        font-size: 16px;
+        border-radius: 4px;
+        border: 1px solid hsl(0, 9%, 98%);
+      }
+      
+      .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        text-decoration: none;
+        background-color: #4CAF50;
+        color: #fff;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      
+      .btn:hover {
+        background-color: #45a049;
+      }
+      
+      .side-panel {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 200px;
+        background-color: transparent;
+        padding: 20px;
+      }
+      
+      .side-panel p {
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+      .side-panel {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 200px;
+        background-image: url('{{ url_for("static", filename="images/image7.jpg") }}');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <head>
+    <title>Background Image Example</title>
+    <style>
+      body {
+        background-image: url('{{ url_for("static", filename="images/image2.jpg") }}');
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+      }
+      
+      /* Add additional CSS styles for other elements */
+      
+    </style>
+  </head>
+  <body>
+    <div class="side-panel">
+      
+      <p>Selected Currency: <span id="selected-currency"></span></p>
+      <p>Roof: <span id="roof-value"></span></p>
+      <p>Floor: <span id="floor-value"></span></p>
+      <button class="btn" onclick="updateValues()">Update Values</button>
+    </div>
+    
+    <div class="container">
+      <div class="card">
+        <h2 class="title">Trading Bot</h2>
+        
+        
+        
+        <div class="form-group1">
+          <label for="currency">Choose Currency:</label>
+          <select id="currency">
+            <option value="GBP_JPY">GBP/JPY</option>
+            <option value="XAU_USD">XAU/USD</option>
+            <option value="USD_JPY">USD/JPY</option>
+            <option value="GBP_USD">GBP/USD</option>
+            <option value="EUR_USD">EUR/USD</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <button class="btn" onclick="confirmCurrency()">Confirm Currency</button>
+          <button class="btn" onclick="runTradeBot()">Run TradeBot</button>
+        </div>
+
+        <div class="form-group1">
+          <label for="entry-price">Entry Price:</label>
+          <input type="text" id="entry-price">
+        </div>
+        
+        <div class="form-group1">
+          <label for="stop-loss">Stop Loss:</label>
+          <input type="text" id="stop-loss">
+        </div>
+        
+       
+        <div class="form-group1">
+          <label for="take-profit">Take Profit:</label>
+          <input type="text" id="take-profit">
+        </div>
+        
+        <div class="form-group1">
+          <label for="entry-time">Entry Time:</label>
+          <input type="text" id="entry-time">
+        </div>
+        <div class="form-group">
+
+          <button class="btn" onclick="getEntryDetails()">Get Entry Details</button>
+        </div>
+        
+        <div id="entry-details"></div>
+
+        <div class="form-group">
+          
+          <button class="btn" onclick="stopTradeBot()">Stop TradeBot</button>
+          <button class="btn" onclick="clearScreen()">Clear Screen</button>
+          <button class="btn">Log Out</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      function runTradeBot() {
+        // Send a request to start the TradeBot
+        fetch("/start-tradebot")
+          .then(function(response) {
+            // Handle the response
+            if (response.ok) {
+              console.log("TradeBot started successfully!");
+            } else {
+              console.log("Error starting TradeBot:", response.statusText);
+            }
+          })
+          .catch(function(error) {
+            console.log("Error:", error);
+          });
+      }
+    </script>
+    <script>
+      function confirmCurrency() {
+        // Get the selected currency from the dropdown
+        const currency = document.getElementById("currency").value;
+
+        // Send an AJAX request to the backend API endpoint
+        fetch(`/confirm-currency?currency=${currency}`)
+          .then(response => response.text())
+          .then(data => {
+            console.log(data); // Print the response from the backend
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
+    </script>
+    <script>
+      function stopTradeBot() {
+        // Send an AJAX request to the backend API endpoint
+        fetch("/stop-trade-bot")
+          .then(response => response.text())
+          .then(data => {
+            console.log(data); // Print the response from the backend
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
+    </script>
+    <script>
+      function clearScreen() {
+        var contentElement = document.getElementById("content");
+        contentElement.innerHTML = ""; // Clear the content
+      }
+    </script>
+       <script>
+        function updateValues() {
+  // Get the selected currency value
+  var selectedCurrency = document.getElementById('currency').value;
+  
+  // Make an AJAX request to update the values in the backend
+  var data = { 'currency': selectedCurrency };
+
+  fetch('/update_values', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Update the values in the HTML
+      document.getElementById('selected-currency').textContent = selectedCurrency;
+      document.getElementById('roof-value').textContent = data.roof;
+      document.getElementById('floor-value').textContent = data.floor;
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+}
+        
+        function getValues() {
+          // Make an AJAX request to get the values from the backend
+          fetch('/get_values')
+          .then(response => response.json())
+          .then(data => {
+            document.getElementById('roof-value').textContent = data.roof;
+            document.getElementById('floor-value').textContent = data.floor;
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+        }
+        
+        // Call the getValues() function initially to fetch and display the values
+        //getValues();
+        
+        // Periodically update the values every 5 seconds
+        setInterval(getValues, 300000);
+      </script>
+    
+    <script>
+      function updateEntryDetails() {
+          $.ajax({
+              url: '/entry-details',
+              method: 'GET',
+              success: function(response) {
+                  var entryDetails = response;
+                  var entryDetailsHtml = '';
+
+                  if (entryDetails.hasOwnProperty('type')) {
+                      entryDetailsHtml += 'Type: ' + entryDetails.type + '<br>';
+                  }
+
+                  if (entryDetails.hasOwnProperty('entry_price')) {
+                      entryDetailsHtml += 'Entry Price: ' + entryDetails.entry_price + '<br>';
+                  }
+
+                  if (entryDetails.hasOwnProperty('stop_loss')) {
+                      entryDetailsHtml += 'Stop Loss: ' + entryDetails.stop_loss + '<br>';
+                  }
+
+                  if (entryDetails.hasOwnProperty('take_profit')) {
+                      entryDetailsHtml += 'Take Profit: ' + entryDetails.take_profit + '<br>';
+                  }
+
+                  if (entryDetails.hasOwnProperty('entry_time')) {
+                      entryDetailsHtml += 'Entry Time: ' + entryDetails.entry_time + '<br>';
+                  }
+
+                  $('#entry-details').html(entryDetailsHtml);
+              }
+          });
+      }
+
+      // Call the updateEntryDetails function to update the entry details periodically
+      setInterval(updateEntryDetails, 300000);  // Update every 3 seconds
+      // Update entry details every 5 seconds
+      setInterval(getEntryDetails, 300000);
+  </script>
+  
+  </body>
+</html>
