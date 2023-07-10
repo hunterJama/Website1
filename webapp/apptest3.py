@@ -513,4 +513,4 @@ bot_token = '6357819400:AAG885Lit52WKOYcNJ8roYbvAdK8gqcEfCA'
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=False,host='0.0.0.0')
