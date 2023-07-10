@@ -154,8 +154,8 @@ def execute_buy_trade(entry_price):
 
     entry_details['type'] = 'Buy'
     entry_details['entry_price'] = entry_price
-    entry_details['stop_loss'] = stop_loss
-    entry_details['take_profit'] = take_profit
+    entry_details['stop_loss'] = actual_stop_loss
+    entry_details['take_profit'] = actual_take_profit
 
     # Get the current time
     current_time = datetime.datetime.now()
@@ -169,8 +169,8 @@ def execute_buy_trade(entry_price):
         "Currency: " + symbol,
         "Type: Sell",
         "Entry: " + str(entry_price),
-        "Take Profit: " + str(take_profit),
-        "Stop Loss: " + str(stop_loss),
+        "Take Profit: " + str(actual_take_profit),
+        "Stop Loss: " + str(actual_stop_loss),
         "Time: " + current_time_string
     }
     send_message(bot_token, message)
@@ -310,8 +310,8 @@ def execute_sell_trade(entry_price):
 
     entry_details['type'] = 'Sell'
     entry_details['entry_price'] = entry_price
-    entry_details['stop_loss'] = stop_loss
-    entry_details['take_profit'] = take_profit
+    entry_details['stop_loss'] = actual_stop_loss
+    entry_details['take_profit'] = actual_take_profit
     # Get the current time
     current_time = datetime.datetime.now()
 
@@ -323,8 +323,8 @@ def execute_sell_trade(entry_price):
         "Currency: " + symbol,
         "Type: Sell",
         "Entry: " + str(entry_price),
-        "Take Profit: " + str(take_profit),
-        "Stop Loss: " + str(stop_loss),
+        "Take Profit: " + str(actual_take_profit),
+        "Stop Loss: " + str(actual_stop_loss),
         "Time: " + current_time_string
     }
     send_message(bot_token, message)
